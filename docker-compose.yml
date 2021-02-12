@@ -1,0 +1,59 @@
+version: "3.7"
+
+services:
+  app:
+    build:
+      context: ./
+      dockerfile: ./docker/php/Dockerfile
+    image: notifier
+    container_name: notifier-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    networks:
+      - notifier
+
+  db:
+    image: mysql:latest
+    container_name: notifier-db
+    restart: always
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: amistapp_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+      MYSQL_USER: root
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - ./docker/mysql:/var/lib/mysql
+    networks:
+      - notifier
+
+  nginx:
+    image: nginx:alpine
+    container_name: notifier-nginx
+    restart: unless-stopped
+    ports:
+      - 8000:80
+      - 4430:443
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx:/etc/nginx/conf.d/
+    networks:
+      - notifier
+
+  redis:
+    image: "redis:alpine"
+    container_name: notifier-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - notifier
+
+networks:
+  notifier:
+    driver: bridge
