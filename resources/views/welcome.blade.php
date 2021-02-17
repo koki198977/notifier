@@ -6,7 +6,6 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>Laravel</title>
-
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
     </head>
@@ -24,13 +23,22 @@
     </body>
 
     <script src="https://realdev.cl:{{ env('LARAVEL_ECHO_PORT') }}/socket.io/socket.io.js"></script>
-    <!-- <script src="http://localhost:{{ env('LARAVEL_ECHO_PORT') }}/socket.io/socket.io.js"></script> -->
     <script src="{{ asset('/js/app.js') }}"></script>
     <script>
         Echo.channel('example')
             .listen('.ExampleEvent', e => {
                 console.log(e)
+
+                axios.post('/api/file', {
+                    data: e
+                })
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.log( error);
+                });
+
             })
     </script>
-
 </html>
