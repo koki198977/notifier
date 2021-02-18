@@ -37,6 +37,7 @@ class VoucherController extends Controller
         $impresora->setTextSize(1, 1);
         $impresora->text("https://parzibyte.me");
         $impresora->feed(5);
+        $impresora->cut();
         $impresora->close();
     }
 
