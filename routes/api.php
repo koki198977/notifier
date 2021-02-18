@@ -17,3 +17,4 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function(){ return "welcome to API";});
 Route::post('/', 'ExampleController@index');
 Route::post('/file', 'VoucherController@index');
+Route::post('/pre_cuenta', 'VoucherController@preCuenta');

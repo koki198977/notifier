@@ -1950,8 +1950,8 @@ window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__.default({
   // key: process.env.MIX_PUSHER_APP_KEY,
   // cluster: process.env.MIX_PUSHER_APP_CLUSTER,
   // host: `${window.localtion.hostname}:${window.laravelEchoPort}`,
-  host: 'https://realdev.cl:6001' // host: 'http://localhost:6001',
-  // transports: ['websocket']
+  // host: 'https://realdev.cl:6001',
+  host: 'http://localhost:6001' // transports: ['websocket']
   // forceTLS: true
 
 });
