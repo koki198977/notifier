@@ -38,16 +38,15 @@ class PrinterService
     }
 
     public function printTicket($data){
-        //return $data->impresora;
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
 
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(3,2);
         $impresora->text($data->comercio . $this->jump);
-	$impresora->feed(1);
+        $impresora->feed(1);
 
-	$impresora->setTextSize(1,1);
+        $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
         $impresora->text("Mesa:" . $this->space . $data->mesa . $this->jump);
         $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
@@ -57,18 +56,58 @@ class PrinterService
 
         $impresora->setTextSize(1, 2);
         $impresora->text("DESCRIPCION DEL PRODUCTO:" . $this->jump);
-	$impresora->feed(1);
+        $impresora->feed(1);
 
         $impresora->setTextSize(1, 1);
         foreach ($data->detalle as $key => $value) {
             $impresora->text($value['cantidad'] . $this->tab . $value['nombre'] . $this->jump);
-	    if(!empty($value['observacion'])){	
-            	$impresora->text($this->line . $value['observacion'] . $this->jump);
-		$impresora->feed(1);
-	    }	
+            if(!empty($value['observacion'])){	
+                $impresora->text($this->line . $value['observacion'] . $this->jump);
+                $impresora->feed(1);
+            }	
         }
         $impresora->feed(2);
-	$impresora->setJustification(Printer::JUSTIFY_CENTER);
+        $impresora->setJustification(Printer::JUSTIFY_CENTER);
+        $impresora->setTextSize(1, 1);
+        $impresora->text('https://realdev.cl');
+
+        $impresora->feed(3);
+        $impresora->cut();
+        $impresora->close();
+    }
+
+    public function printHappy($data){
+        $connector = new WindowsPrintConnector($data->impresora);
+        $impresora = new Printer($connector);
+
+        $impresora->setJustification(Printer::JUSTIFY_CENTER);
+        $impresora->setTextSize(3,2);
+        $impresora->text($data->comercio . $this->jump);
+        $impresora->feed(1);
+
+        $impresora->setTextSize(1,1);
+        $impresora->setJustification(Printer::JUSTIFY_LEFT);
+        $impresora->text("Mesa:" . $this->space . $data->mesa . $this->jump);
+        $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
+        $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
+        $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
+        $impresora->feed(1);
+
+        $impresora->setTextSize(1, 2);
+        $impresora->text("TICKET VALIDO COMO HAPPY" . $this->jump);
+        $impresora->feed(1);
+
+        $impresora->setTextSize(1, 1);
+        foreach ($data->detalle as $key => $value) {
+            $impresora->text($value['nombre'] . $this->jump);
+        }
+
+        $impresora->feed(1);
+        $impresora->barcode($data->comercio, Printer::BARCODE_CODE39);
+        $impresora->text($data->comercio . $this->jump);
+
+        $impresora->feed(2);
+        $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(1, 1);
         $impresora->text('https://realdev.cl');
 

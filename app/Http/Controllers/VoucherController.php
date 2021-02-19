@@ -39,7 +39,7 @@ class VoucherController extends Controller
 
     public function solicitaHappy(Request $request)
     {
-        return $this->printPreCuenta($request);
+        return $this->printService->printHappy($request);
     }
 
 
