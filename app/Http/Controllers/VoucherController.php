@@ -4,12 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
-use Mike42\Escpos\Printer;
+
 use Response;
+use App\Services\PrinterService;
 
 class VoucherController extends Controller
 {
+    protected $printService;
+
+    public function __construct(PrinterService $service)
+    {
+        $this->printService = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -22,55 +29,17 @@ class VoucherController extends Controller
 
     public function preCuenta(Request $request)
     {
-        return $request;
         return $this->printPreCuenta($request);
     }
 
     public function solicitaTicket(Request $request)
     {
-        return $request;
-        return $this->printPreCuenta($request);
+        return $this->printService->printTicket($request);
     }
 
     public function solicitaHappy(Request $request)
     {
-        return $request;
         return $this->printPreCuenta($request);
-    }
-
-
-    private function print(){
-        $nombreImpresora = "CUPS-BRF-Printer";
-        $connector = new WindowsPrintConnector($nombreImpresora);
-        $impresora = new Printer($connector);
-        $impresora->setJustification(Printer::JUSTIFY_CENTER);
-        $impresora->setTextSize(2, 2);
-        $impresora->text("Imprimiendo\n");
-        $impresora->text("ticket\n");
-        $impresora->text("desde\n");
-        $impresora->text("Laravel\n");
-        $impresora->setTextSize(1, 1);
-        $impresora->text("https://parzibyte.me");
-        $impresora->feed(5);
-        $impresora->cut();
-        $impresora->close();
-    }
-
-    private function printPreCuenta($data){
-        $connector = new WindowsPrintConnector($data->impresora);
-        $impresora = new Printer($connector);
-
-        $impresora->setJustification(Printer::JUSTIFY_CENTER);
-        $impresora->setTextSize(2, 2);
-        $impresora->text("Imprimiendo\n");
-        $impresora->text("ticket\n");
-        $impresora->text("desde\n");
-        $impresora->text("Laravel\n");
-        $impresora->setTextSize(1, 1);
-        $impresora->text(env('LARAVEL_ECHO_HOST'));
-        $impresora->feed(5);
-        $impresora->cut();
-        $impresora->close();
     }
 
 
