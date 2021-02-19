@@ -10,8 +10,10 @@ use Mike42\Escpos\Printer;
 class PrinterService
 {
 
-    protected $jump = '\n';
-    protected $tab = '\t';
+    protected $jump = "\n";
+    protected $space = " ";
+    protected $tab = "   ";
+    protected $line = "----";
 
     public function __construct()
     {
@@ -36,31 +38,39 @@ class PrinterService
     }
 
     public function printTicket($data){
-        return $data->impresora;
+        //return $data->impresora;
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
 
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
-        $impresora->setTextSize(2,2);
-        $impresora->text("TURQUESA".$jump);
-        $impresora->setJustification(Printer::JUSTIFY_LEFT);
-        $impresora->text("Mesa:" . $data->mesa . $jump);
-        $impresora->setTextSize(1,1);
-        $impresora->text("N int:" . $data->movimiento . $jump);
-        $impresora->text("Fecha:" . date('Y-m-d H:i:s') . $jump);
-        $impresora->text("Atendido por:" . $data->mesero . $jump);
-        $impresora->setLineSpacing(1);
+        $impresora->setTextSize(3,2);
+        $impresora->text($data->comercio . $this->jump);
+	$impresora->feed(1);
 
-        $impresora->setTextSize(2, 1);
-        $impresora->text("DESCRIPCIÓN DEL PRODUCTO:" . $jump);
+	$impresora->setTextSize(1,1);
+        $impresora->setJustification(Printer::JUSTIFY_LEFT);
+        $impresora->text("Mesa:" . $this->space . $data->mesa . $this->jump);
+        $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
+        $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
+        $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
+        $impresora->feed(1);
+
+        $impresora->setTextSize(1, 2);
+        $impresora->text("DESCRIPCION DEL PRODUCTO:" . $this->jump);
+	$impresora->feed(1);
+
         $impresora->setTextSize(1, 1);
         foreach ($data->detalle as $key => $value) {
-            $impresora->text($value->cantidad . $tab . $value->nombre . $jump);
-            $impresora->text($value->observacion . $jump);
+            $impresora->text($value['cantidad'] . $this->tab . $value['nombre'] . $this->jump);
+	    if(!empty($value['observacion'])){	
+            	$impresora->text($this->line . $value['observacion'] . $this->jump);
+		$impresora->feed(1);
+	    }	
         }
-        $impresora->setLineSpacing(2);
+        $impresora->feed(2);
+	$impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(1, 1);
-        $impresora->text(env('LARAVEL_ECHO_HOST'));
+        $impresora->text('https://realdev.cl');
 
         $impresora->feed(3);
         $impresora->cut();
