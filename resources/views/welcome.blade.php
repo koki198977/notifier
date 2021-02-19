@@ -47,5 +47,35 @@
                     console.log(error);
                 });
             })
+
+        Echo.channel('voucher-ticket.{{ env('LARAVEL_COD_COMERCIO') }}')
+            .listen('.VoucherEvent', data => {
+                console.log(data.data)
+                list.push(data.data)
+                document.getElementById('text').innerHTML = JSON.stringify(list.reverse());
+                document.getElementById('last').innerHTML = JSON.stringify(data.data);
+                axios.post('/api/solicita_ticket', data.data)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            })
+        
+        Echo.channel('voucher-happy.{{ env('LARAVEL_COD_COMERCIO') }}')
+            .listen('.VoucherEvent', data => {
+                console.log(data.data)
+                list.push(data.data)
+                document.getElementById('text').innerHTML = JSON.stringify(list.reverse());
+                document.getElementById('last').innerHTML = JSON.stringify(data.data);
+                axios.post('/api/solicita_happy', data.data)
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+            })
     </script>
 </html>

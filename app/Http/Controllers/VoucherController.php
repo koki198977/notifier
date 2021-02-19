@@ -22,10 +22,21 @@ class VoucherController extends Controller
 
     public function preCuenta(Request $request)
     {
-        return $request->impresora;
+        return $request;
         return $this->printPreCuenta($request);
     }
 
+    public function solicitaTicket(Request $request)
+    {
+        return $request;
+        return $this->printPreCuenta($request);
+    }
+
+    public function solicitaHappy(Request $request)
+    {
+        return $request;
+        return $this->printPreCuenta($request);
+    }
 
 
     private function print(){
