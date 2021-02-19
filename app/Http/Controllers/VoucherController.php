@@ -22,6 +22,7 @@ class VoucherController extends Controller
 
     public function preCuenta(Request $request)
     {
+        return $request->impresora;
         return $this->printPreCuenta($request);
     }
 
@@ -55,7 +56,7 @@ class VoucherController extends Controller
         $impresora->text("desde\n");
         $impresora->text("Laravel\n");
         $impresora->setTextSize(1, 1);
-        $impresora->text("https://realdev.cl");
+        $impresora->text(env('LARAVEL_ECHO_HOST'));
         $impresora->feed(5);
         $impresora->cut();
         $impresora->close();
