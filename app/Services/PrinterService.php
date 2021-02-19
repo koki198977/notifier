@@ -94,6 +94,7 @@ class PrinterService
         $impresora->feed(1);
 
         $impresora->setTextSize(1, 2);
+        $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->text("TICKET VALIDO COMO HAPPY" . $this->jump);
         $impresora->feed(1);
 
