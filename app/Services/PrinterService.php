@@ -49,7 +49,7 @@ class PrinterService
         $impresora->text("N int:" . $data->movimiento . $jump);
         $impresora->text("Fecha:" . date('Y-m-d H:i:s') . $jump);
         $impresora->text("Atendido por:" . $data->mesero . $jump);
-        $impresora->feed(1);
+        $impresora->setLineSpacing(1);
 
         $impresora->setTextSize(2, 1);
         $impresora->text("DESCRIPCIÓN DEL PRODUCTO:" . $jump);
@@ -58,10 +58,10 @@ class PrinterService
             $impresora->text($value->cantidad . $tab . $value->nombre . $jump);
             $impresora->text($value->observacion . $jump);
         }
-        $impresora->feed(2);
+        $impresora->setLineSpacing(2);
         $impresora->setTextSize(1, 1);
         $impresora->text(env('LARAVEL_ECHO_HOST'));
-        
+
         $impresora->feed(3);
         $impresora->cut();
         $impresora->close();
