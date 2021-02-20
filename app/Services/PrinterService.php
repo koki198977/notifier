@@ -62,8 +62,7 @@ class PrinterService
         // header
 
         $impresora->setTextSize(1, 2);
-        // $impresora->text("PRODUCTO" . str_repeat(" ", 22) . "UNI PRECIO". $this->space. $this->space . "TOTAL" . $this->space . $this->jump);
-        $impresora->text($this->set_space_col("PRODUCTO", 25) . $this->set_space_col("UNI", 3) . $this->set_space_col("PRECIO", 8) . $this->set_space_col("TOTAL", 12) . $this->jump);
+        $impresora->text($this->set_space_col("PRODUCTO", 25) . $this->set_space_col("UNI", 3) . $this->set_space_col("PRECIO", 8, true) . $this->set_space_col("TOTAL", 12, true) . $this->jump);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed(1);
 
@@ -184,9 +183,9 @@ class PrinterService
         return '$' . number_format($value, 0);
     }
 
-    private function set_space_col($value, $size){
+    private function set_space_col($value, $size, $is_reverse = false){
         $count = $size - strlen($value);
-        return $value . str_repeat(" ", $count);
+        return !$is_reverse ? $value . str_repeat(" ", $count) : str_repeat(" ", $count) . $value;
     }
 
     private function set_space_footer($title, $value, $size){
