@@ -181,6 +181,6 @@ class PrinterService
     }
 
     private function currency($value){
-        return '$' . number_format($data->totales[0]['totalsinprop'], 0);
+        return '$' . number_format($value, 0);
     }
 }
