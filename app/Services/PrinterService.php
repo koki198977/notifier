@@ -68,7 +68,7 @@ class PrinterService
 
         $impresora->setTextSize(1, 1);
         foreach ($data->detalle as $key => $value) {
-            $impresora->text($this->set_space_col($value['nombre'], 25) . $this->set_space_col($value['cantidad'], 3) . $this->set_space_col($value['precio'], 8, true) . $this->set_space_col($value['subtotal'], 12, true) . $this->jump);
+            $impresora->text($this->set_space_col($value['nombre'], 25) . $this->set_space_col($value['cantidad'], 3, true) . $this->set_space_col($value['precio'], 8, true) . $this->set_space_col($value['subtotal'], 12, true) . $this->jump);
         }
 
         // totales
