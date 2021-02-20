@@ -63,7 +63,7 @@ class PrinterService
 
         $impresora->setTextSize(1, 2);
         $impresora->text($this->space . "PRODUCTO" . str_repeat(" ", 20) . "UNI PRECIO". $this->space. $this->space . "TOTAL" . $this->space . $this->jump);
-        $impresora->text(str_repeat("-", $max_width) . $this->jump);
+        $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed(1);
 
         // $impresora->setTextSize(1, 1);
@@ -75,6 +75,7 @@ class PrinterService
         //     }	
         // }
 
+        // totales
         $impresora->setTextSize(1, 2);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed(1);
@@ -82,12 +83,10 @@ class PrinterService
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
         $impresora->text("Total sin prop." . $this->space . $this->currency($data->totales[0]['totalsinprop']) . $this->jump);
-        $impresora->text("TOTAL:" . $this->space . $data->totales[0]['total'] . $this->jump);
-        $impresora->text("Propina sugerida:" . $this->space . $data->totales[0]['propina'] . $this->jump);
-        $impresora->text("Total con prop." . $this->space . $data->totales[0]['totalconprop'] . $this->jump);
+        $impresora->text("Total:" . $this->space . $this->currency($data->totales[0]['total']) . $this->jump);
+        $impresora->text("Propina sugerida:" . $this->space . $this->currency($data->totales[0]['propina']) . $this->jump);
+        $impresora->text("Total con prop." . $this->space . $this->currency($data->totales[0]['totalconprop']) . $this->jump);
         $impresora->feed(1);
-
-
 
         // footer
         $impresora->feed(2);
