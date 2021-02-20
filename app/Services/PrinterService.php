@@ -81,7 +81,7 @@ class PrinterService
 
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
-        $impresora->text("Total sin prop." . $this->space . $data->totales[0]['totalsinprop'] . $this->jump);
+        $impresora->text("Total sin prop." . $this->space . number_format($data->totales[0]['totalsinprop'], 0) . $this->jump);
         $impresora->text("TOTAL:" . $this->space . $data->totales[0]['total'] . $this->jump);
         $impresora->text("Propina sugerida:" . $this->space . $data->totales[0]['propina'] . $this->jump);
         $impresora->text("Total con prop." . $this->space . $data->totales[0]['totalconprop'] . $this->jump);
