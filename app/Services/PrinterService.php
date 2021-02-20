@@ -66,14 +66,10 @@ class PrinterService
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed(1);
 
-        // $impresora->setTextSize(1, 1);
-        // foreach ($data->detalle as $key => $value) {
-        //     $impresora->text($value['cantidad'] . $this->tab . $value['nombre'] . $this->jump);
-        //     if(!empty($value['observacion'])){	
-        //         $impresora->text($this->line . $value['observacion'] . $this->jump);
-        //         $impresora->feed(1);
-        //     }	
-        // }
+        $impresora->setTextSize(1, 1);
+        foreach ($data->detalle as $key => $value) {
+            $impresora->text($this->set_space_col($value['nombre'], 25) . $this->set_space_col($value['cantidad'], 3) . $this->set_space_col($value['precio'], 8, true) . $this->set_space_col($value['subtotal'], 12, true) . $this->jump);
+        }
 
         // totales
         $impresora->setTextSize(1, 2);
