@@ -219,7 +219,7 @@ class PrinterService
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
 
-        $impresora->pdf417Code($text);
+        $impresora->pdf417Code($text,300,3,30,0.10,Printer::PDF417_STANDARD);
 
         $impresora->feed(3);
         $impresora->cut();
