@@ -20,3 +20,4 @@ Route::get('/', function(){ return "welcome to API";});
 Route::post('/pre_cuenta', 'VoucherController@preCuenta');
 Route::post('/solicita_ticket', 'VoucherController@solicitaTicket');
 Route::post('/solicita_happy', 'VoucherController@solicitaHappy');
+Route::post('/solicita_boleta_electronica', 'VoucherController@solicitaElectronica');

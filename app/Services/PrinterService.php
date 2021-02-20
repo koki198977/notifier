@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
+use Illuminate\Support\Facades\Storage;
 
 class PrinterService
 {
@@ -64,7 +65,7 @@ class PrinterService
         $impresora->setTextSize(1, 2);
         $impresora->text($this->set_space_col("PRODUCTO", 25) . $this->set_space_col("UNI", 3) . $this->set_space_col("PRECIO", 8, true) . $this->set_space_col("TOTAL", 12, true) . $this->jump);
         $impresora->setTextSize(1, 1);
-	$impresora->text(str_repeat("_", $max_width) . $this->jump);
+        $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed(1);
 
         $impresora->setTextSize(1, 1);
@@ -171,6 +172,20 @@ class PrinterService
         $impresora->setTextSize(1, 1);
         $impresora->text('https://realdev.cl');
 
+        $impresora->feed(3);
+        $impresora->cut();
+        $impresora->close();
+    }
+
+    public function printSII($data){
+        $disk = Storage::disk('sftp');
+        $pdf = $disk->download($data->url);
+
+        $connector = new WindowsPrintConnector($data->impresora);
+        $impresora = new Printer($connector);
+
+        $impresora->text($pdf);
+        
         $impresora->feed(3);
         $impresora->cut();
         $impresora->close();

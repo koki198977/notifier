@@ -52,6 +52,18 @@ return [
             'endpoint' => env('AWS_ENDPOINT'),
         ],
 
+        'sftp' => [
+            'driver' => 'sftp',
+            'host' => '142.93.59.163',
+            'port' => 22,
+            'username' => 'root',
+            'password' => 'iCopete20*root',
+            'root' => '/',
+
+            'visibility' => 'public', // defaults to 'private'
+            'permPublic' => 0775
+        ]
+
     ],
 
     /*

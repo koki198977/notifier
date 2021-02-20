@@ -37,5 +37,10 @@ class VoucherController extends Controller
         return $this->printService->printHappy($request);
     }
 
+    public function solicitaElectronica(Request $request)
+    {
+        return $this->printService->printSII($request);
+    }
+
 
 }
