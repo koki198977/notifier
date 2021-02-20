@@ -48,8 +48,8 @@ class PrinterService
         $impresora->setTextSize(3,2);
         $impresora->text($data->comercio . $this->jump);
         $impresora->setTextSize(2,1);
-        $impresora->text('Ovalle' . $this->jump);
-        $impresora->text('Las Canteras, 132' . $this->jump);
+        $impresora->text($data->comuna . $this->jump);
+        $impresora->text($data->direccion . $this->jump);
         $impresora->feed(1);
 
         $impresora->setTextSize(1,1);
@@ -181,6 +181,6 @@ class PrinterService
     }
 
     private function currency($value){
-        return money_format('$',number_format($data->totales[0]['totalsinprop'], 0));
+        return '$' . number_format($data->totales[0]['totalsinprop'], 0);
     }
 }
