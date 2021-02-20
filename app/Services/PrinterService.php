@@ -184,7 +184,7 @@ class PrinterService
     }
 
     private function set_space($title, $value, $size){
-        $count = $size - (count($title) + count($value));
+        $count = $size - (strlen($title) + strlen($value));
         return $title . str_repeat(" ", $count) . $value;
     }
 }
