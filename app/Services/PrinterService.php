@@ -60,7 +60,7 @@ class PrinterService
         // header
 
         $impresora->setTextSize(1, 2);
-        $impresora->text("----------------------------------------" . $this->jump);
+        $impresora->text("--------------------------------------------------" . $this->jump);
         $impresora->feed(1);
 
         // $impresora->setTextSize(1, 1);
