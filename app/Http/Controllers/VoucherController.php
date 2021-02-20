@@ -24,7 +24,7 @@ class VoucherController extends Controller
 
     public function preCuenta(Request $request)
     {
-        return $this->printPreCuenta($request);
+        return  $this->printService->printPreCuenta($request);
     }
 
     public function solicitaTicket(Request $request)
