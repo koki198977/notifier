@@ -41,6 +41,8 @@ class PrinterService
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
 
+        $max_width = 48; 
+
         // header
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(3,2);
@@ -60,7 +62,8 @@ class PrinterService
         // header
 
         $impresora->setTextSize(1, 2);
-        $impresora->text("--------------------------------------------------" . $this->jump);
+        $impresora->text($this->space . "PRODUCTO" . str_repeat(" ", 20) . "UNI PRECIO". $this->space. $this->space . "TOTAL" . $this->space . $this->jump);
+        $impresora->text(str_repeat("-", $max_width) . $this->jump);
         $impresora->feed(1);
 
         // $impresora->setTextSize(1, 1);
@@ -72,6 +75,9 @@ class PrinterService
         //     }	
         // }
 
+        $impresora->setTextSize(1, 2);
+        $impresora->text(str_repeat("_", $max_width) . $this->jump);
+        $impresora->feed(1);
 
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
