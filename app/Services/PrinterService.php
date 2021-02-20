@@ -62,7 +62,7 @@ class PrinterService
         // header
 
         $impresora->setTextSize(1, 2);
-        $impresora->text($this->space . "PRODUCTO" . str_repeat(" ", 20) . "UNI PRECIO". $this->space. $this->space . "TOTAL" . $this->space . $this->jump);
+        $impresora->text("PRODUCTO" . str_repeat(" ", 22) . "UNI PRECIO". $this->space. $this->space . "TOTAL" . $this->space . $this->jump);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed(1);
 
@@ -82,10 +82,10 @@ class PrinterService
 
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
-        $impresora->text("Total sin prop." . $this->space . $this->currency($data->totales[0]['totalsinprop']) . $this->jump);
-        $impresora->text("Total:" . $this->space . $this->currency($data->totales[0]['total']) . $this->jump);
-        $impresora->text("Propina sugerida:" . $this->space . $this->currency($data->totales[0]['propina']) . $this->jump);
-        $impresora->text("Total con prop." . $this->space . $this->currency($data->totales[0]['totalconprop']) . $this->jump);
+        $impresora->text($this->set_space("Total sin prop.", $this->space . $this->currency($data->totales[0]['totalsinprop'])) . $this->jump);
+        $impresora->text($this->set_space("Total:", $this->space . $this->currency($data->totales[0]['total'])) . $this->jump);
+        $impresora->text($this->set_space("Propina sugerida:", $this->space . $this->currency($data->totales[0]['propina'])) . $this->jump);
+        $impresora->text($this->set_space("Total con prop.", $this->space . $this->currency($data->totales[0]['totalconprop'])) . $this->jump);
         $impresora->feed(1);
 
         // footer
@@ -181,5 +181,10 @@ class PrinterService
 
     private function currency($value){
         return '$' . number_format($value, 0);
+    }
+
+    private function set_space($title, $value, $size){
+        $count = $size - (count($title) + count($value));
+        return $title . str_repeat(" ", $count) . $value;
     }
 }
