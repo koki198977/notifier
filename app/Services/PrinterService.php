@@ -180,16 +180,46 @@ class PrinterService
     }
 
     public function printSII($data){
-        $disk = Storage::disk('sftp');
-        $pdf = $disk->download($data->url);
+        $text = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
+        $text .= '<TED version="1.0">';
+        $text .= "<DD>";
+        $text .= "<RE>76324007-K</RE>";
+        $text .= "<TD>39</TD>";
+        $text .= "<F>24</F>";
+        $text .= "<FE>2021-02-20</FE>";
+        $text .= "<RR>66666666-6</RR>";
+        $text .= "<RSR>Sin RUT</RSR>";
+        $text .= "<MNT>30000</MNT>";
+        $text .= "<IT1>AGUA TONICA  350CC</IT1>";
+        $text .= '<CAF version="1.0">';
+        $text .= "<DA>";
+        $text .= "<RE>76324007-K</RE>";
+        $text .= "<RS>SOCIEDAD COMERCIAL DLORENZO LTDA</RS>";
+        $text .= "<TD>39</TD>";
+        $text .= "<RNG>";
+        $text .= "<D>1</D>";
+        $text .= "<H>200</H>";
+        $text .= "</RNG>";
+        $text .= "<FA>2021-02-10</FA>";
+        $text .= "<RSAPK>";
+        $text .= "<M>wjCqHUlxwu8YiTINboHAMqJycmfSEFuZTpECHLn12nz+3DVAakO";
+        $text .= "HRhRLnQhv4h13HKPWejX4mswT3dH1Xdb7fw==</M>";
+        $text .= "<E>Aw==</E>";
+        $text .= "</RSAPK>";
+        $text .= "<IDK>100</IDK>";
+        $text .= "</DA>";
+        $text .= '<FRMA algoritmo="SHA1withRSA">wcYejPYMvDKjnC840LiMzs6oxKV9';
+        $text .= "3nBAB+wyEVW7+iWg2UnxEmLuKph6RzocBWxE2G3HQmMgaTCDOawWXmPGJw==</FRMA>";
+        $text .= "</CAF>";
+        $text .= "<TSTED>2021-02-20T09:55:03</TSTED>";
+        $text .= "</DD>";
+        $text .= '<FRMT algoritmo="SHA1withRSA">cNv3wUGFyZKVBr803Aufq+Erx8fQRc/o';
+        $text .= "+xruwnH0fvW8WV1qkECzhsg19/NihOZGidtvgC3Knj5bKjfIWvNLRg==</FRMT></TED>";
 
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
 
-        $pages = ImagickEscposImage::loadPdf($pdf);
-        foreach ($pages as $page) {
-            $impresora->graphics($page);
-        }
+        $impresora->pdf417Code($text);
 
         $impresora->feed(3);
         $impresora->cut();
