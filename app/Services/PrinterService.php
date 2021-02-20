@@ -62,7 +62,8 @@ class PrinterService
         // header
 
         $impresora->setTextSize(1, 2);
-        $impresora->text("PRODUCTO" . str_repeat(" ", 22) . "UNI PRECIO". $this->space. $this->space . "TOTAL" . $this->space . $this->jump);
+        // $impresora->text("PRODUCTO" . str_repeat(" ", 22) . "UNI PRECIO". $this->space. $this->space . "TOTAL" . $this->space . $this->jump);
+        $impresora->text($this->set_space_col("PRODUCTO", 25) . $this->set_space_col("UNI", 3) . $this->set_space_col("PRECIO", 8) . $this->set_space_col("TOTAL", 12) . $this->jump);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed(1);
 
@@ -82,10 +83,10 @@ class PrinterService
 
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
-        $impresora->text($this->set_space("Total sin prop.", $this->space . $this->currency($data->totales[0]['totalsinprop']), $max_width) . $this->jump);
-        $impresora->text($this->set_space("Total:", $this->space . $this->currency($data->totales[0]['total']), $max_width) . $this->jump);
-        $impresora->text($this->set_space("Propina sugerida:", $this->space . $this->currency($data->totales[0]['propina']), $max_width) . $this->jump);
-        $impresora->text($this->set_space("Total con prop.", $this->space . $this->currency($data->totales[0]['totalconprop']), $max_width) . $this->jump);
+        $impresora->text($this->set_space_footer("Total sin prop.", $this->space . $this->currency($data->totales[0]['totalsinprop']), $max_width) . $this->jump);
+        $impresora->text($this->set_space_footer("Total:", $this->space . $this->currency($data->totales[0]['total']), $max_width) . $this->jump);
+        $impresora->text($this->set_space_footer("Propina sugerida:", $this->space . $this->currency($data->totales[0]['propina']), $max_width) . $this->jump);
+        $impresora->text($this->set_space_footer("Total con prop.", $this->space . $this->currency($data->totales[0]['totalconprop']), $max_width) . $this->jump);
         $impresora->feed(1);
 
         // footer
@@ -183,7 +184,12 @@ class PrinterService
         return '$' . number_format($value, 0);
     }
 
-    private function set_space($title, $value, $size){
+    private function set_space_col($value, $size){
+        $count = $size - strlen($value);
+        return $value . str_repeat(" ", $count);
+    }
+
+    private function set_space_footer($title, $value, $size){
         $count = $size - (strlen($title) + strlen($value));
         return $title . str_repeat(" ", $count) . $value;
     }
