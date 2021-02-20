@@ -6,6 +6,8 @@ use Exception;
 use Illuminate\Http\Request;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
+use Mike42\Escpos\ImagickEscposImage;
+use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Illuminate\Support\Facades\Storage;
 
 class PrinterService
@@ -184,8 +186,11 @@ class PrinterService
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
 
-        $impresora->text($pdf);
-        
+        $pages = ImagickEscposImage::loadPdf($pdf);
+        foreach ($pages as $page) {
+            $impresora->graphics($page);
+        }
+
         $impresora->feed(3);
         $impresora->cut();
         $impresora->close();
