@@ -195,6 +195,7 @@ class PrinterService
         $impresora->text("BOLETA ELECTRONICA" . $this->jump);
         $impresora->text("N°" . $this->space . $encabezado['IdDoc']['Folio']);
         $impresora->feed();
+	$impresora->setTextSize(1,1);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed();
 
