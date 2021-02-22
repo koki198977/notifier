@@ -235,7 +235,7 @@ class PrinterService
         $impresora->text($this->set_space_col("Exento $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['MntExe'],0), 18, true) . $this->jump);
         $impresora->text($this->set_space_col("IVA (%) $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['IVA'],0), 18, true) . $this->jump);
         $impresora->text($this->set_space_col("Total $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['MntTotal'],0), 18, true) . $this->jump);
-        $impresora->feed(2);
+        $impresora->feed();
 
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $img = EscposImage::load(public_path() . '/pdf417code.png', false);
@@ -243,7 +243,7 @@ class PrinterService
         $impresora->text("Timbre Electronico SII" . $this->jump);
         $impresora->text("Resolucion 99 de 2021" . $this->jump);
         $impresora->text("Verifique documento: www.sii.cl" . $this->jump);
-        $impresora->feed(2);
+        $impresora->feed();
 
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed();
