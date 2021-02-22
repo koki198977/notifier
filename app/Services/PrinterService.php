@@ -53,7 +53,7 @@ class PrinterService
         $impresora->setTextSize(2,1);
         $impresora->text($data->comuna . $this->jump);
         $impresora->text($data->direccion . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
@@ -61,14 +61,14 @@ class PrinterService
         $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
         // header
 
         $impresora->setTextSize(1, 2);
         $impresora->text($this->set_space_col("PRODUCTO", 25) . $this->set_space_col("UNI", 3) . $this->set_space_col("PRECIO", 8, true) . $this->set_space_col("TOTAL", 12, true) . $this->jump);
         $impresora->setTextSize(1, 1);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         $impresora->setTextSize(1, 1);
         foreach ($data->detalle as $key => $value) {
@@ -78,7 +78,7 @@ class PrinterService
         // totales
         $impresora->setTextSize(1, 1);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
@@ -86,7 +86,7 @@ class PrinterService
         $impresora->text($this->set_space_footer("Total:", $this->space . $this->currency($data->totales[0]['total']), $max_width) . $this->jump);
         $impresora->text($this->set_space_footer("Propina sugerida:", $this->space . $this->currency($data->totales[0]['propina']), $max_width) . $this->jump);
         $impresora->text($this->set_space_footer("Total con prop.", $this->space . $this->currency($data->totales[0]['totalconprop']), $max_width) . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         // footer
         $impresora->feed(2);
@@ -106,7 +106,7 @@ class PrinterService
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(3,2);
         $impresora->text($data->comercio . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
@@ -114,18 +114,18 @@ class PrinterService
         $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         $impresora->setTextSize(1, 2);
         $impresora->text("DESCRIPCION DEL PRODUCTO:" . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         $impresora->setTextSize(1, 1);
         foreach ($data->detalle as $key => $value) {
             $impresora->text($value['cantidad'] . $this->tab . $value['nombre'] . $this->jump);
             if(!empty($value['observacion'])){	
                 $impresora->text($this->line . $value['observacion'] . $this->jump);
-                $impresora->feed(1);
+                $impresora->feed();
             }	
         }
         $impresora->feed(2);
@@ -145,7 +145,7 @@ class PrinterService
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(3,2);
         $impresora->text($data->comercio . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
@@ -153,19 +153,19 @@ class PrinterService
         $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         $impresora->setTextSize(1, 2);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->text("TICKET VALIDO COMO HAPPY" . $this->jump);
-        $impresora->feed(1);
+        $impresora->feed();
 
         $impresora->setTextSize(1, 1);
         foreach ($data->detalle as $key => $value) {
             $impresora->text($value['nombre'] . $this->jump);
         }
 
-        $impresora->feed(1);
+        $impresora->feed();
         $impresora->barcode($data->comercio, Printer::BARCODE_CODE39);
         $impresora->text($data->comercio . $this->jump);
 
@@ -181,6 +181,7 @@ class PrinterService
 
     public function printSII($value, $data){
         $encabezado = $value['SetDTE']['DTE']['Documento']['Encabezado'];
+        $detalle = $value['SetDTE']['DTE']['Documento']['Detalle'];
 
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
@@ -212,6 +213,22 @@ class PrinterService
         $impresora->text("Emision:" . $this->space . $this->dateToText() . $this->jump);
         $impresora->feed();
 
+        // body
+        $impresora->setTextSize(1, 1);
+        $impresora->text(str_repeat("_", $max_width) . $this->jump);
+        $impresora->text($this->set_space_col("Item", 12) . $this->set_space_col("P. unitario", 12) . $this->set_space_col("Cant.", 12, true) . $this->set_space_col("Total item", 12, true) . $this->jump);
+        $impresora->text(str_repeat("_", $max_width) . $this->jump);
+        $impresora->feed();
+
+        $impresora->setTextSize(1, 1);
+        foreach ($detalle as $key => $value) {
+            $impresora->text($value['NmbItem'] . $this->jump);
+            $impresora->text($this->set_space_col("", 12) . $this->set_space_col($value['PrcItem'], 12) . $this->set_space_col($this->currency($value['QtyItem']), 12, true) . $this->set_space_col(number_format($value['MontoItem'], 0), 12, true) . $this->jump);
+        }
+        $impresora->text(str_repeat("_", $max_width) . $this->jump);
+        $impresora->feed();
+
+        // totales
         $impresora->text($this->set_space_col("Neto $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['MntNeto'],0), 18, true) . $this->jump);
         $impresora->text($this->set_space_col("Exento $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['MntExe'],0), 18, true) . $this->jump);
         $impresora->text($this->set_space_col("IVA (%) $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['IVA'],0), 18, true) . $this->jump);
@@ -252,45 +269,45 @@ class PrinterService
 
     private function dateToText(){
         $year = date('Y');
-        $month = date('m') + 1;
+        $month = date('m');
         $day = date('d');
         $month_str = '';
 
         switch ($month) {
-            case '01' || 1:
+            case 1:
                 $month_str = 'Enero';
                 break;
-            case '02' || 2:
+            case 2:
                 $month_str = 'Febrero';
                 break;
-            case '03' || 3:
+            case 3:
                 $month_str = 'Marzo';
                 break;
-            case '04' || 4:
+            case 4:
                 $month_str = 'Abril';
                 break;
-            case '05' || 5:
+            case 5:
                 $month_str = 'Mayo';
                 break;
-            case '06' || 6:
+            case 6:
                 $month_str = 'Junio';
                 break;
-            case '07' || 7:
+            case 7:
                 $month_str = 'Julio';
                 break;
-            case '08' || 8:
+            case 8:
                 $month_str = 'Agosto';
                 break;
-            case '09' || 9:
+            case 9:
                 $month_str = 'Septiembre';
                 break;
-            case '10' || 10:
+            case 10:
                 $month_str = 'Octubre';
                 break;
-            case '11' || 11:
+            case 11:
                 $month_str = 'Noviembre';
                 break;
-            case '12' || 12:
+            case 12:
                 $month_str = 'Diciembre';
                 break;
             
