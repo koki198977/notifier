@@ -50,7 +50,7 @@ class PrinterService
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(3,2);
         $impresora->text($data->comercio . $this->jump);
-        $impresora->setTextSize(2,1);
+        $impresora->setTextSize(1,1);
         $impresora->text($data->comuna . $this->jump);
         $impresora->text($data->direccion . $this->jump);
         $impresora->feed();
@@ -62,8 +62,8 @@ class PrinterService
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
         $impresora->feed();
-        // header
 
+        // body
         $impresora->setTextSize(1, 2);
         $impresora->text($this->set_space_col("PRODUCTO", 25) . $this->set_space_col("UNI", 3) . $this->set_space_col("PRECIO", 8, true) . $this->set_space_col("TOTAL", 12, true) . $this->jump);
         $impresora->setTextSize(1, 1);
