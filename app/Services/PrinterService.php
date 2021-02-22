@@ -195,7 +195,7 @@ class PrinterService
         $impresora->text("BOLETA ELECTRONICA" . $this->jump);
         $impresora->text("N°" . $this->space . $encabezado['IdDoc']['Folio']);
         $impresora->feed();
-	$impresora->setTextSize(1,1);
+        $impresora->setTextSize(1,1);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed();
 
@@ -217,14 +217,15 @@ class PrinterService
         // body
         $impresora->setTextSize(1, 1);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
-        $impresora->text($this->set_space_col("Item", 12) . $this->set_space_col("P. unitario", 12) . $this->set_space_col("Cant.", 12, true) . $this->set_space_col("Total item", 12, true) . $this->jump);
+        $impresora->text($this->set_space_col("Item", 12) . $this->set_space_col("P. unitario", 12) . $this->set_space_col("Cant.", 12) . $this->set_space_col("Total item", 12, true));
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed();
 
+        $impresora->setJustification(Printer::JUSTIFY_LEFT);
         $impresora->setTextSize(1, 1);
         foreach ($detalle as $key => $value) {
             $impresora->text($value['NmbItem'] . $this->jump);
-            $impresora->text($this->set_space_col("", 12) . $this->set_space_col($value['PrcItem'], 12) . $this->set_space_col($this->currency($value['QtyItem']), 12, true) . $this->set_space_col(number_format($value['MontoItem'], 0), 12, true) . $this->jump);
+            $impresora->text($this->set_space_col("", 12) . $this->set_space_col($value['PrcItem'], 12) . $this->set_space_col($this->currency($value['QtyItem']), 12) . $this->set_space_col(number_format($value['MontoItem'], 0), 12, true) . $this->jump);
         }
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed();
