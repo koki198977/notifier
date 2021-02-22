@@ -257,31 +257,31 @@ class PrinterService
         $month_str = '';
 
         switch ($month) {
-            case '1' || 1:
+            case '01' || 1:
                 $month_str = 'Enero';
                 break;
-            case '2' || 2:
+            case '02' || 2:
                 $month_str = 'Febrero';
                 break;
-            case '3' || 3:
+            case '03' || 3:
                 $month_str = 'Marzo';
                 break;
-            case '4' || 4:
+            case '04' || 4:
                 $month_str = 'Abril';
                 break;
-            case '5' || 5:
+            case '05' || 5:
                 $month_str = 'Mayo';
                 break;
-            case '6' || 6:
+            case '06' || 6:
                 $month_str = 'Junio';
                 break;
-            case '7' || 7:
+            case '07' || 7:
                 $month_str = 'Julio';
                 break;
-            case '8' || 8:
+            case '08' || 8:
                 $month_str = 'Agosto';
                 break;
-            case '9' || 9:
+            case '09' || 9:
                 $month_str = 'Septiembre';
                 break;
             case '10' || 10:
