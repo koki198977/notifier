@@ -192,7 +192,7 @@ class PrinterService
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(2,2);
         $impresora->text("R.U.T.." . $this->space . $encabezado['Emisor']['RUTEmisor'] . $this->jump);
-        $impresora->text("BOLETA ELECTRONICA" . $this->jump);
+        $impresora->text(utf8_decode("BOLETA ELECTRÓNICA") . $this->jump);
         $impresora->setTextSize(1,1);
         $impresora->text("N°:" . $this->space . $encabezado['IdDoc']['Folio']);
         $impresora->feed();

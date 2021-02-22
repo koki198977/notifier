@@ -18,11 +18,25 @@ class Pdf417Service
 
     public function createPdf417($data){
         $pdf417 = new PDF417();
-        $data = $pdf417->encode($data);
-        $renderer = new ImageRenderer();
+        $pdf417->setColumns(9);
+        
+        $ted = $this->clearXML($data);
 
-        $image = $renderer->render($data);
+        $pdf = $pdf417->encode($ted);
+        $renderer = new ImageRenderer([ 'scale' => 20, 'ratio' => 1]);
+
+        $image = $renderer->render($pdf);
         $image->save('pdf417code.png');
         return;
+    }
+
+    private function clearXML($data){
+        $ted = strstr($data,'<TED');
+        $toFind = '</TED>';
+        $pos = strpos($ted, $toFind);
+        $ted = substr($ted, 0, $pos + strlen($toFind));
+        $ted = mb_detect_encoding($ted, ['UTF-8', 'ISO-8859-1']) != 'ISO-8859-1' ? utf8_decode($ted) : $ted;
+
+        return $ted;
     }
 }

@@ -9,6 +9,7 @@ use Response;
 use App\Services\PrinterService;
 use App\Services\GetXMLService;
 use App\Services\Pdf417Service;
+use XML;
 
 class VoucherController extends Controller
 {
@@ -46,11 +47,10 @@ class VoucherController extends Controller
     public function solicitaElectronica(Request $request)
     {
         $data = $this->xmlService->getXML($request);
-        // return $data['json'];
-        //$this->pdf417Service->createPdf417("<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>");
+        $this->pdf417Service->createPdf417($data['xml']);
         $this->printService->printSII($data['json'], $request);
         return;
-    }
 
+    }
 
 }
