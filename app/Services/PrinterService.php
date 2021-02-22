@@ -179,8 +179,8 @@ class PrinterService
         $impresora->close();
     }
 
-    public function printSII($data){
-        $encabezado = $data['SetDTE']['DTE']['Documento']['Encabezado'];
+    public function printSII($value, $data){
+        $encabezado = $value['SetDTE']['DTE']['Documento']['Encabezado'];
 
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
@@ -216,7 +216,7 @@ class PrinterService
         $impresora->feed(3);
 
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
-        $img = EscposImage::load(public_path() . '/pdf417code.png');
+        $img = EscposImage::load(public_path() . '/pdf417code.png', false);
         $impresora->bitImage($img);
         $impresora->text("Timbre Electronico SII" . $this->jump);
         $impresora->text("Resolucion 99 de 2021" . $this->jump);
@@ -227,7 +227,7 @@ class PrinterService
         $impresora->text("GRACIAS POR PREFERIRNOS" . $this->jump);
         $impresora->text("TURQUESA" . $this->jump);
         $impresora->feed(3);
-        
+
         $impresora->cut();
         $impresora->close();
     }

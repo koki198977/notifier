@@ -46,9 +46,9 @@ class VoucherController extends Controller
     public function solicitaElectronica(Request $request)
     {
         $data = $this->xmlService->getXML($request);
-        return $data['json'];
-        $this->pdf417Service->createPdf417("<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>");
-        // $this->printService->printSII($request);
+        // return $data['json'];
+        //$this->pdf417Service->createPdf417("<note><to>Tove</to><from>Jani</from><heading>Reminder</heading><body>Don't forget me this weekend!</body></note>");
+        $this->printService->printSII($data['json'], $request);
         return;
     }
 
