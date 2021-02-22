@@ -195,6 +195,8 @@ class PrinterService
         $impresora->text("N°" . $this->space . $encabezado['IdDoc']['Folio'] . $this->jump);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed();
+        
+        $impresora->setTextSize(1,1);
         $impresora->text("S.I.I. -" . $this->space . $encabezado['Emisor']['CmnaOrigen'] . $this->jump);
         $impresora->feed();
 
@@ -213,7 +215,7 @@ class PrinterService
         $impresora->text($this->set_space_col("Exento $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['MntExe'],0), 18, true) . $this->jump);
         $impresora->text($this->set_space_col("IVA (%) $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['IVA'],0), 18, true) . $this->jump);
         $impresora->text($this->set_space_col("Total $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['MntTotal'],0), 18, true) . $this->jump);
-        $impresora->feed(3);
+        $impresora->feed(2);
 
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $img = EscposImage::load(public_path() . '/pdf417code.png', false);
@@ -224,6 +226,7 @@ class PrinterService
         $impresora->feed(2);
 
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
+        $impresora->feed();
         $impresora->text("GRACIAS POR PREFERIRNOS" . $this->jump);
         $impresora->text("TURQUESA" . $this->jump);
         $impresora->feed(3);
@@ -248,7 +251,7 @@ class PrinterService
 
     private function dateToText(){
         $year = date('Y');
-        $month = date('m');
+        $month = date('m') + 1;
         $day = date('d');
         $month_str = '';
 
@@ -295,6 +298,6 @@ class PrinterService
                 break;
         }
 
-        return $day . $this->space . 'de' . $this->space . $month_str . 'del' . $this->space . $year;
+        return $day . $this->space . 'de' . $this->space . $month_str . $this->space . 'del' . $this->space . $year;
     }
 }
