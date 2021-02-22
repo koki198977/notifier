@@ -231,10 +231,10 @@ class PrinterService
         $impresora->feed();
 
         // totales
-        $impresora->text($this->set_space_col("Neto $ :", 24, true) . $this->set_space_col(number_format($encabezado['Totales']['MntNeto'],0), 18, true) . $this->jump);
-        $impresora->text($this->set_space_col("Exento $ :", 24, true) . $this->set_space_col(number_format($encabezado['Totales']['MntExe'],0), 18, true) . $this->jump);
-        $impresora->text($this->set_space_col("IVA (%) $ :", 24, true) . $this->set_space_col(number_format($encabezado['Totales']['IVA'],0), 18, true) . $this->jump);
-        $impresora->text($this->set_space_col("Total $ :", 24, true) . $this->set_space_col(number_format($encabezado['Totales']['MntTotal'],0), 18, true) . $this->jump);
+        $impresora->text($this->set_space_col("Neto $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntNeto'],0), 16, true) . $this->jump);
+        $impresora->text($this->set_space_col("Exento $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntExe'],0), 16, true) . $this->jump);
+        $impresora->text($this->set_space_col("IVA (%) $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['IVA'],0), 16, true) . $this->jump);
+        $impresora->text($this->set_space_col("Total $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntTotal'],0), 16, true) . $this->jump);
         $impresora->feed();
 
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
