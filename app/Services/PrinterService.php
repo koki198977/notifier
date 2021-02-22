@@ -195,7 +195,7 @@ class PrinterService
         $impresora->text("N°" . $this->space . $encabezado['IdDoc']['Folio'] . $this->jump);
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed();
-        
+
         $impresora->setTextSize(1,1);
         $impresora->text("S.I.I. -" . $this->space . $encabezado['Emisor']['CmnaOrigen'] . $this->jump);
         $impresora->feed();
@@ -228,7 +228,7 @@ class PrinterService
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed();
         $impresora->text("GRACIAS POR PREFERIRNOS" . $this->jump);
-        $impresora->text("TURQUESA" . $this->jump);
+        $impresora->text($data->comercio . $this->jump);
         $impresora->feed(3);
 
         $impresora->cut();
