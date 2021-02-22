@@ -6,7 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
-use Mike42\Escpos\ImagickEscposImage;
+use Mike42\Escpos\EscposImage;
 use Mike42\Escpos\PrintConnectors\FilePrintConnector;
 use Illuminate\Support\Facades\Storage;
 
@@ -180,48 +180,54 @@ class PrinterService
     }
 
     public function printSII($data){
-        $text = '<?xml version="1.0" encoding="UTF-8" standalone="no"?>';
-        $text .= '<TED version="1.0">';
-        $text .= "<DD>";
-        $text .= "<RE>76324007-K</RE>";
-        $text .= "<TD>39</TD>";
-        $text .= "<F>24</F>";
-        $text .= "<FE>2021-02-20</FE>";
-        $text .= "<RR>66666666-6</RR>";
-        $text .= "<RSR>Sin RUT</RSR>";
-        $text .= "<MNT>30000</MNT>";
-        $text .= "<IT1>AGUA TONICA  350CC</IT1>";
-        $text .= '<CAF version="1.0">';
-        $text .= "<DA>";
-        $text .= "<RE>76324007-K</RE>";
-        $text .= "<RS>SOCIEDAD COMERCIAL DLORENZO LTDA</RS>";
-        $text .= "<TD>39</TD>";
-        $text .= "<RNG>";
-        $text .= "<D>1</D>";
-        $text .= "<H>200</H>";
-        $text .= "</RNG>";
-        $text .= "<FA>2021-02-10</FA>";
-        $text .= "<RSAPK>";
-        $text .= "<M>wjCqHUlxwu8YiTINboHAMqJycmfSEFuZTpECHLn12nz+3DVAakO";
-        $text .= "HRhRLnQhv4h13HKPWejX4mswT3dH1Xdb7fw==</M>";
-        $text .= "<E>Aw==</E>";
-        $text .= "</RSAPK>";
-        $text .= "<IDK>100</IDK>";
-        $text .= "</DA>";
-        $text .= '<FRMA algoritmo="SHA1withRSA">wcYejPYMvDKjnC840LiMzs6oxKV9';
-        $text .= "3nBAB+wyEVW7+iWg2UnxEmLuKph6RzocBWxE2G3HQmMgaTCDOawWXmPGJw==</FRMA>";
-        $text .= "</CAF>";
-        $text .= "<TSTED>2021-02-20T09:55:03</TSTED>";
-        $text .= "</DD>";
-        $text .= '<FRMT algoritmo="SHA1withRSA">cNv3wUGFyZKVBr803Aufq+Erx8fQRc/o';
-        $text .= "+xruwnH0fvW8WV1qkECzhsg19/NihOZGidtvgC3Knj5bKjfIWvNLRg==</FRMT></TED>";
+        $encabezado = $data['SetDTE']['DTE']['Documento']['Encabezado'];
 
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
 
-        $impresora->pdf417Code($text,300,3,30,0.10,Printer::PDF417_STANDARD);
+        $max_width = 48; 
 
+        // header
+        $impresora->setJustification(Printer::JUSTIFY_CENTER);
+        $impresora->setTextSize(2,2);
+        $impresora->text("R.U.T.." . $this->space . $encabezado['Emisor']['RUTEmisor'] . $this->jump);
+        $impresora->text("BOLETA ELECTRONICA" . $this->jump);
+        $impresora->text("N°" . $this->space . $encabezado['IdDoc']['Folio'] . $this->jump);
+        $impresora->text(str_repeat("_", $max_width) . $this->jump);
+        $impresora->feed();
+        $impresora->text("S.I.I. -" . $this->space . $encabezado['Emisor']['CmnaOrigen'] . $this->jump);
+        $impresora->feed();
+
+        $impresora->setJustification(Printer::JUSTIFY_LEFT);
+        $impresora->setTextSize(1,1);
+        $impresora->text($encabezado['Emisor']['RznSocEmisor']  . $this->jump);
+        $impresora->text($encabezado['Emisor']['GiroEmisor']  . $this->jump);
+        $impresora->text($encabezado['Emisor']['DirOrigen'] . ',' . $this->space . $encabezado['Emisor']['CmnaOrigen']  . $this->jump);
+        $impresora->feed();
+
+        $impresora->setJustification(Printer::JUSTIFY_CENTER);
+        $impresora->text("Emision:" . $this->space . $this->dateToText() . $this->jump);
+        $impresora->feed();
+
+        $impresora->text($this->set_space_col("Neto $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['MntNeto'],0), 18, true) . $this->jump);
+        $impresora->text($this->set_space_col("Exento $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['MntExe'],0), 18, true) . $this->jump);
+        $impresora->text($this->set_space_col("IVA (%) $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['IVA'],0), 18, true) . $this->jump);
+        $impresora->text($this->set_space_col("Total $ :", 25, true) . $this->set_space_col(number_format($encabezado['Totales']['MntTotal'],0), 18, true) . $this->jump);
         $impresora->feed(3);
+
+        $impresora->setJustification(Printer::JUSTIFY_CENTER);
+        $img = EscposImage::load(public_path() . '/pdf417code.png');
+        $impresora->bitImage($img);
+        $impresora->text("Timbre Electronico SII" . $this->jump);
+        $impresora->text("Resolucion 99 de 2021" . $this->jump);
+        $impresora->text("Verifique documento: www.sii.cl" . $this->jump);
+        $impresora->feed(2);
+
+        $impresora->text(str_repeat("_", $max_width) . $this->jump);
+        $impresora->text("GRACIAS POR PREFERIRNOS" . $this->jump);
+        $impresora->text("TURQUESA" . $this->jump);
+        $impresora->feed(3);
+        
         $impresora->cut();
         $impresora->close();
     }
@@ -238,5 +244,57 @@ class PrinterService
     private function set_space_footer($title, $value, $size){
         $count = $size - (strlen($title) + strlen($value));
         return $title . str_repeat(" ", $count) . $value;
+    }
+
+    private function dateToText(){
+        $year = date('Y');
+        $month = date('m');
+        $day = date('d');
+        $month_str = '';
+
+        switch ($month) {
+            case '1' || 1:
+                $month_str = 'Enero';
+                break;
+            case '2' || 2:
+                $month_str = 'Febrero';
+                break;
+            case '3' || 3:
+                $month_str = 'Marzo';
+                break;
+            case '4' || 4:
+                $month_str = 'Abril';
+                break;
+            case '5' || 5:
+                $month_str = 'Mayo';
+                break;
+            case '6' || 6:
+                $month_str = 'Junio';
+                break;
+            case '7' || 7:
+                $month_str = 'Julio';
+                break;
+            case '8' || 8:
+                $month_str = 'Agosto';
+                break;
+            case '9' || 9:
+                $month_str = 'Septiembre';
+                break;
+            case '10' || 10:
+                $month_str = 'Octubre';
+                break;
+            case '11' || 11:
+                $month_str = 'Noviembre';
+                break;
+            case '12' || 12:
+                $month_str = 'Diciembre';
+                break;
+            
+            default:
+                $month_str = '--';
+                break;
+        }
+
+        return $day . $this->space . 'de' . $this->space . $month_str . 'del' . $this->space . $year;
     }
 }
