@@ -240,9 +240,14 @@ class PrinterService
 
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
         $impresora->setTextSize(1, 1);
-        foreach ($detalle as $key => $value) {
-            $impresora->text($value['NmbItem'] . $this->jump);
-            $impresora->text($this->set_space_col("", 12) . $this->set_space_col(number_format($value['PrcItem'], 0), 14) . $this->set_space_col(number_format($value['QtyItem'], 0), 10) . $this->set_space_col(number_format($value['MontoItem'], 0), 12, true) . $this->jump);
+        if(is_array($detalle)){
+            $impresora->text($detalle['NmbItem'] . $this->jump);
+            $impresora->text($this->set_space_col("", 12) . $this->set_space_col(number_format($detalle['PrcItem'], 0), 14) . $this->set_space_col(number_format($detalle['QtyItem'], 0), 10) . $this->set_space_col(number_format($detalle['MontoItem'], 0), 12, true) . $this->jump);
+        }else{
+            foreach ($detalle as $key => $value) {
+                $impresora->text($value['NmbItem'] . $this->jump);
+                $impresora->text($this->set_space_col("", 12) . $this->set_space_col(number_format($value['PrcItem'], 0), 14) . $this->set_space_col(number_format($value['QtyItem'], 0), 10) . $this->set_space_col(number_format($value['MontoItem'], 0), 12, true) . $this->jump);
+            }
         }
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
         $impresora->feed();
