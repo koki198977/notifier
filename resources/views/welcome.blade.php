@@ -12,8 +12,8 @@
     </head>
     <body>
         <div id="app" class="container">
-            
                 <h1 class="mt-4">REALDEV - CLI</h1>
+		<h6>Cli: {{env('LARAVEL_COD_COMERCIO')}}</h6>
                 <h6>Version: 1.0.0</h6>
                 <h6>Estado: 
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
@@ -33,7 +33,7 @@
     <script>
         const list = [];
 
-        Echo.channel('voucher-precuenta.{{ env('LARAVEL_COD_COMERCIO') }}')
+        Echo.channel('voucher-precuenta.{{env('LARAVEL_COD_COMERCIO')}}')
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)
@@ -78,7 +78,7 @@
                 });
             })
 
-        Echo.channel('voucher-sii.{{ env('LARAVEL_COD_COMERCIO') }}')
+        Echo.channel('voucher-sii.{{env('LARAVEL_COD_COMERCIO')}}')
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)

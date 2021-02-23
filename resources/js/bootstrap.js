@@ -33,6 +33,5 @@ import Echo from 'laravel-echo';
 
 window.Echo = new Echo({
     broadcaster: 'socket.io',
-    // host: 'https://realdev.cl:6001',
-    host: process.env.LARAVEL_ECHO_HOST + ':' + process.env.LARAVEL_ECHO_PORT,
+   host:  "https://realdev.cl:6001",
 });
