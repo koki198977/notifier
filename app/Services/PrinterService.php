@@ -180,6 +180,7 @@ class PrinterService
     }
 
     public function printSII($value, $data){
+        $caratula = $value['SetDTE']['Caratula'];
         $encabezado = $value['SetDTE']['DTE']['Documento']['Encabezado'];
         $detalle = $value['SetDTE']['DTE']['Documento']['Detalle'];
 
@@ -194,7 +195,7 @@ class PrinterService
         $impresora->text("R.U.T.." . $this->space . $encabezado['Emisor']['RUTEmisor'] . $this->jump);
         $impresora->text(("BOLETA ELECTRÓNICA") . $this->jump);
         $impresora->setTextSize(1,1);
-        $impresora->text(("N°:") . $this->space . $encabezado['IdDoc']['Folio']);
+        $impresora->text(("Folio:") . $this->space . $encabezado['IdDoc']['Folio']);
         $impresora->feed();
     
         $impresora->text(str_repeat("_", $max_width) . $this->jump);
@@ -212,7 +213,7 @@ class PrinterService
         $impresora->feed();
 
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
-        $impresora->text("Emision:" . $this->space . $this->dateToText() . $this->jump);
+        $impresora->text("Emision:" . $this->space . $this->dateToText($encabezado['IdDoc']['FchEmis']) . $this->jump);
         $impresora->feed();
 
         // body
@@ -242,7 +243,7 @@ class PrinterService
         $img = EscposImage::load(public_path() . '/pdf417code.png', false);
         $impresora->bitImage($img);
         $impresora->text("Timbre Electronico SII" . $this->jump);
-        $impresora->text("Resolucion 99 de 2021" . $this->jump);
+        $impresora->text("Resolucion" . $this->space . $caratula['NroResol'] . ' de ' . explode('-', $caratula['FchResol'])[0] . $this->jump);
         $impresora->text("Verifique documento: www.sii.cl" . $this->jump);
         $impresora->feed();
 
@@ -270,10 +271,11 @@ class PrinterService
         return $title . str_repeat(" ", $count) . $value;
     }
 
-    private function dateToText(){
-        $year = date('Y');
-        $month = date('m');
-        $day = date('d');
+    private function dateToText($value){
+        $date = explode('-', $value);
+        $year = $date[0];
+        $month = intval($date[1]);
+        $day = $date[2];
         $month_str = '';
 
         switch ($month) {

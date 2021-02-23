@@ -23,7 +23,7 @@ class Pdf417Service
         $ted = $this->clearXML($data);
 
         $pdf = $pdf417->encode($ted);
-        $renderer = new ImageRenderer([ 'scale' => 10, 'ratio' => 1]);
+        $renderer = new ImageRenderer([ 'scale' => 2, 'ratio' => 2]);
 
         $image = $renderer->render($pdf);
         $image->save('pdf417code.png');
