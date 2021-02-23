@@ -88,6 +88,16 @@ class PrinterService
         $impresora->setTextSize(1,1);
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
         $impresora->text($this->set_space_footer("Total sin prop.", $this->space . $this->currency($data->totales[0]['totalsinprop']), $max_width) . $this->jump);
+        
+        if(intval($data->totales[0]['descuento']) > 0){
+            $impresora->text($this->set_space_footer("Descuento", $this->space . $this->currency($data->totales[0]['descuento']), $max_width) . $this->jump);
+        }
+        if(intval($data->totales[0]['descuespecial']) > 0){
+            $impresora->text($this->set_space_footer("Desc. especial:", $this->space . $this->currency($data->totales[0]['descuespecial']), $max_width) . $this->jump);
+        }
+        if(intval($data->totales[0]['descpuntos']) > 0){
+            $impresora->text($this->set_space_footer("Desc. puntos:", $this->space . $this->currency($data->totales[0]['descpuntos']), $max_width) . $this->jump);
+        }
         $impresora->text($this->set_space_footer("Total:", $this->space . $this->currency($data->totales[0]['total']), $max_width) . $this->jump);
         $impresora->text($this->set_space_footer("Propina sugerida:", $this->space . $this->currency($data->totales[0]['propina']), $max_width) . $this->jump);
         $impresora->text($this->set_space_footer("Total con prop.", $this->space . $this->currency($data->totales[0]['totalconprop']), $max_width) . $this->jump);
