@@ -240,7 +240,7 @@ class PrinterService
 
         $impresora->setJustification(Printer::JUSTIFY_LEFT);
         $impresora->setTextSize(1, 1);
-        if(is_array($detalle)){
+        if(is_object($detalle)){
             $impresora->text($detalle['NmbItem'] . $this->jump);
             $impresora->text($this->set_space_col("", 12) . $this->set_space_col(number_format($detalle['PrcItem'], 0), 14) . $this->set_space_col(number_format($detalle['QtyItem'], 0), 10) . $this->set_space_col(number_format($detalle['MontoItem'], 0), 12, true) . $this->jump);
         }else{
