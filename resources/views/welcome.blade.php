@@ -28,12 +28,12 @@
         </div>
     </body>
 
-    <script src="{{ env('LARAVEL_ECHO_HOST') }}:{{ env('LARAVEL_ECHO_PORT') }}/socket.io/socket.io.js"></script>
+    <script src="https://realdev.cl:6001/socket.io/socket.io.js"></script>
     <script src="{{ asset('/js/app.js') }}"></script>
     <script>
         const list = [];
 
-        Echo.channel('voucher-precuenta.{{env('LARAVEL_COD_COMERCIO')}}')
+        Echo.channel('voucher-precuenta.REAL001')
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)
@@ -48,7 +48,7 @@
                 });
             })
 
-        Echo.channel('voucher-ticket.{{ env('LARAVEL_COD_COMERCIO') }}')
+        Echo.channel('voucher-ticket.REAL001')
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)
@@ -63,7 +63,7 @@
                 });
             })
         
-        Echo.channel('voucher-happy.{{ env('LARAVEL_COD_COMERCIO') }}')
+        Echo.channel('voucher-happy.REAL001')
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)
@@ -78,7 +78,7 @@
                 });
             })
 
-        Echo.channel('voucher-sii.{{env('LARAVEL_COD_COMERCIO')}}')
+        Echo.channel('voucher-sii.REAL001')
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)
