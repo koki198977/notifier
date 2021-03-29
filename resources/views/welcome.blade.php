@@ -32,8 +32,9 @@
     <script src="{{ asset('/js/app.js') }}"></script>
     <script>
         const list = [];
+        const client_name = "REAL002"
 
-        Echo.channel('voucher-precuenta.REAL001')
+        Echo.channel('voucher-precuenta.' + client_name)
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)
@@ -48,7 +49,7 @@
                 });
             })
 
-        Echo.channel('voucher-ticket.REAL001')
+        Echo.channel('voucher-ticket.' + client_name)
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)
@@ -63,7 +64,7 @@
                 });
             })
         
-        Echo.channel('voucher-happy.REAL001')
+        Echo.channel('voucher-happy.' + client_name)
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)
@@ -78,7 +79,7 @@
                 });
             })
 
-        Echo.channel('voucher-sii.REAL001')
+        Echo.channel('voucher-sii.' + client_name)
             .listen('.VoucherEvent', data => {
                 console.log(data.data)
                 list.push(data.data)
