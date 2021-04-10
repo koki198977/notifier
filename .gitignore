@@ -1,6 +1,7 @@
 /node_modules
 /public/hot
 /public/storage
+/public/pdf417code.png
 /storage/*.key
 /vendor
 .env
