@@ -198,6 +198,7 @@ class PrinterService
         $caratula = $value['SetDTE']['Caratula'];
         $encabezado = $value['SetDTE']['DTE']['Documento']['Encabezado'];
         $detalle = $value['SetDTE']['DTE']['Documento']['Detalle'];
+        $documento = $value['SetDTE']['DTE']['Documento'];
 
         $connector = new WindowsPrintConnector($data->impresora);
         $impresora = new Printer($connector);
@@ -256,6 +257,9 @@ class PrinterService
         $impresora->text($this->set_space_col("Neto $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntNeto'],0), 16, true) . $this->jump);
         if(isset($encabezado['Totales']['MntExe'])){
             $impresora->text($this->set_space_col("Exento $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntExe'],0), 16, true) . $this->jump);
+        }
+        if(isset($documento['DscRcgGlobal'])){
+            $impresora->text($this->set_space_col("Desc $ :", 32, true) . $this->set_space_col(number_format($documento['DscRcgGlobal']['ValorDR'],0), 16, true) . $this->jump);
         }
         $impresora->text($this->set_space_col("IVA (%) $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['IVA'],0), 16, true) . $this->jump);
         $impresora->text($this->set_space_col("Total $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntTotal'],0), 16, true) . $this->jump);
