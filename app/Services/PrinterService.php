@@ -72,7 +72,7 @@ class PrinterService
             $impresora->text("Fono:" . $this->space . $cliente['fono'] . $this->jump);
             $impresora->text("Direccion:" . $this->space . $cliente['direccion'] . $this->jump);
             $impresora->text("Referencia:" . $this->space . $cliente['referencia'] . $this->jump);
-            $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . ', ' . $cliente['monto_paga'] . $this->jump);
+            $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . ', $' . $cliente['monto_paga'] . $this->jump);
         } else {
             $impresora->text("Cliente:" . $this->space . $data->nombrecli . $this->jump);
         }
