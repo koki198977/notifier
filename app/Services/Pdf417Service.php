@@ -18,7 +18,7 @@ class Pdf417Service
 
     public function createPdf417($data){
         $pdf417 = new PDF417();
-        $pdf417->setColumns(9);
+        $pdf417->setColumns(10);
         
         $ted = $this->clearXML($data);
 
