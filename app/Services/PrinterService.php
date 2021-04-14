@@ -62,6 +62,13 @@ class PrinterService
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
         $impresora->text("Cliente:" . $this->space . $data->nombrecli . $this->jump);
+
+        if(isset($data->cliente)){
+            $impresora->text("Fono:" . $this->space . $data->cliente['fono'] . $this->jump);
+            $impresora->text("Direccion:" . $this->space . $data->cliente['calle'] . $data->cliente['nro'] . ', ' . $data->cliente['poblacion'] . $this->jump);
+            $impresora->text("Referencia:" . $this->space . $data->cliente['referencia'] . $this->jump);
+            $impresora->text("Forma de Pago:" . $this->space . $data->cliente['fpago'] . $this->jump);
+        }
         $impresora->feed();
 
         // body
