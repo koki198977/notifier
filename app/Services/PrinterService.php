@@ -61,6 +61,7 @@ class PrinterService
         $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
+        $impresora->text("Cliente:" . $this->space . $data->nombrecli . $this->jump);
         $impresora->feed();
 
         // body
