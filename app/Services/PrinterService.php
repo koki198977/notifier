@@ -75,7 +75,11 @@ class PrinterService
             if(isset($cliente['referencia'])){
                 $impresora->text("Referencia:" . $this->space . $cliente['referencia'] . $this->jump);
             }
-            $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . ', $' . $cliente['monto_paga'] . $this->jump);
+            if(isset($cliente['monto_paga'])){
+                $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . ', $' . $cliente['monto_paga'] . $this->jump);
+            }else{
+                $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . $this->jump);
+            }
         } else {
             $impresora->text("Cliente:" . $this->space . $data->nombrecli . $this->jump);
         }
