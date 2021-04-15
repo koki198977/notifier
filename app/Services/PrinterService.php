@@ -81,7 +81,7 @@ class PrinterService
                 $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . $this->jump);
             }
         } else {
-            $impresora->text("Cliente:" . $this->space . $data->nombrecli . $this->jump);
+            $impresora->text("Cliente:" . $this->space . isset($data['nombrecli']) ? $data['nombrecli'] : '' . $this->jump);
         }
         $impresora->feed();
 
@@ -129,7 +129,7 @@ class PrinterService
         $impresora->feed(2);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(1, 1);
-        $impresora->text('https://realdev.cl');
+        $impresora->text('www.realdev.cl');
 
         $impresora->feed(3);
         $impresora->cut();
@@ -151,6 +151,7 @@ class PrinterService
         $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
+        $impresora->text("Cliente:" . $this->space . isset($data['nombrecli']) ? $data['nombrecli'] : '' . $this->jump);
         $impresora->feed();
 
         $impresora->setTextSize(1, 2);
@@ -168,7 +169,7 @@ class PrinterService
         $impresora->feed(2);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(1, 1);
-        $impresora->text('https://realdev.cl');
+        $impresora->text('www.realdev.cl');
 
         $impresora->feed(3);
         $impresora->cut();
@@ -190,6 +191,7 @@ class PrinterService
         $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
+        $impresora->text("Cliente:" . $this->space . isset($data['nombrecli']) ? $data['nombrecli'] : '' . $this->jump);
         $impresora->feed();
 
         $impresora->setTextSize(1, 2);
@@ -209,7 +211,7 @@ class PrinterService
         $impresora->feed(2);
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
         $impresora->setTextSize(1, 1);
-        $impresora->text('https://realdev.cl');
+        $impresora->text('www.realdev.cl');
 
         $impresora->feed(3);
         $impresora->cut();
