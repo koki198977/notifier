@@ -81,7 +81,7 @@ class PrinterService
                 $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . $this->jump);
             }
         } else {
-            $impresora->text("Cliente:" . $this->space . isset($data['nombrecli']) ? $data['nombrecli'] : '' . $this->jump);
+            $impresora->text("Cliente:" . $this->space . (!is_null($data['nombrecli']) ? $data['nombrecli'] : '---') . $this->jump);
         }
         $impresora->feed();
 
@@ -151,7 +151,7 @@ class PrinterService
         $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
-        $impresora->text("Cliente:" . $this->space . (isset($data['nombrecli']) ? $data['nombrecli'] : '') . $this->jump);
+        $impresora->text("Cliente:" . $this->space . (!is_null($data['nombrecli']) ? $data['nombrecli'] : '---') . $this->jump);
         $impresora->feed();
 
         $impresora->setTextSize(1, 2);
@@ -191,7 +191,7 @@ class PrinterService
         $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
         $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
         $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
-        $impresora->text("Cliente:" . $this->space . (isset($data['nombrecli']) ? $data['nombrecli'] : '') . $this->jump);
+        $impresora->text("Cliente:" . $this->space . (!is_null($data['nombrecli']) ? $data['nombrecli'] : '---') . $this->jump);
         $impresora->feed();
 
         $impresora->setTextSize(1, 2);
