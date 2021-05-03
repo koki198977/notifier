@@ -249,7 +249,8 @@ class PrinterService
         $impresora->setTextSize(1,1);
         $impresora->text($encabezado['Emisor']['RznSocEmisor']  . $this->jump);
         $impresora->text($encabezado['Emisor']['GiroEmisor']  . $this->jump);
-        $impresora->text($encabezado['Emisor']['DirOrigen'] . ',' . $this->space . $encabezado['Emisor']['CmnaOrigen']  . $this->jump);
+        // $impresora->text($encabezado['Emisor']['DirOrigen'] . ',' . $this->space . $encabezado['Emisor']['CmnaOrigen']  . $this->jump);
+        $impresora->text((isset($data['direccion']) ? $data['direccion'] : '') . ',' . $this->space . $encabezado['Emisor']['CmnaOrigen']  . $this->jump);
         $impresora->feed();
 
         $impresora->setJustification(Printer::JUSTIFY_CENTER);
