@@ -288,7 +288,9 @@ class PrinterService
         if(isset($documento['DscRcgGlobal'])){
             $impresora->text($this->set_space_col("Desc $ :", 32, true) . $this->set_space_col(number_format($documento['DscRcgGlobal']['ValorDR'],0), 16, true) . $this->jump);
         }
-        $impresora->text($this->set_space_col("IVA (%) $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['IVA'],0), 16, true) . $this->jump);
+        if (isset($encabezado['Totales']['IVA'])) {
+            $impresora->text($this->set_space_col("IVA (%) $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['IVA'],0), 16, true) . $this->jump);
+        }
         $impresora->text($this->set_space_col("Total $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntTotal'],0), 16, true) . $this->jump);
         $impresora->feed();
 
