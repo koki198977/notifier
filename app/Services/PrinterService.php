@@ -279,7 +279,9 @@ class PrinterService
         $impresora->feed();
 
         // totales
-        $impresora->text($this->set_space_col("Neto $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntNeto'],0), 16, true) . $this->jump);
+        if (isset($encabezado['Totales']['MntNeto'])) {
+            $impresora->text($this->set_space_col("Neto $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntNeto'],0), 16, true) . $this->jump);
+        }
         if(isset($encabezado['Totales']['MntExe'])){
             $impresora->text($this->set_space_col("Exento $ :", 32, true) . $this->set_space_col(number_format($encabezado['Totales']['MntExe'],0), 16, true) . $this->jump);
         }
