@@ -12,9 +12,31 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 
+# IDE
 .vscode
+.idea
+
+# Docker
 docker/mysql/*
 !mysql/README.md
 !src/README.md
-!nginx/README.md%
+!nginx/README.md
+
+# OS
 .DS_Store
+Thumbs.db
+
+# Laravel Mix
+/public/css/app.css
+/public/js/app.js
+/public/mix-manifest.json
+
+# Logs
+*.log
+
+# App Notifier build files
+app.notifier/dist/
+app.notifier/node_modules/
+
+# Notifier Server
+notifier-server/node_modules/

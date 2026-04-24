@@ -1,63 +1,148 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Sistema de Impresión para Restaurantes
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Sistema completo de impresión remota para restaurantes usando Laravel + Electron + WebSocket.
 
-## About Laravel
+## 🏗️ Arquitectura
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+```
+App Web (Vercel/Web) → Servidor (realdev.cl) → PC Local (Restaurante)
+                           ↓                        ↓
+                    notifier-server           Laravel + Electron
+                    (WebSocket Server)        (Cliente de Impresión)
+```
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## 📁 Estructura del Proyecto
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **/** - Proyecto Laravel (cliente de impresión)
+- **app.notifier/** - App Electron (interfaz desktop)
+- **notifier-server/** - Servidor WebSocket Node.js
 
-## Learning Laravel
+## 🚀 Instalación en PC del Restaurante
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Requisitos
+- Windows 10+
+- PHP 7.4+ ([descargar](https://windows.php.net/download/))
+- Composer ([descargar](https://getcomposer.org/download/))
+- Node.js 14+ ([descargar](https://nodejs.org/))
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Paso 1: Clonar el proyecto
+```bash
+git clone https://github.com/koki198977/notifier.git
+cd notifier
+```
 
-## Laravel Sponsors
+### Paso 2: Configurar Laravel
+```bash
+# Instalar dependencias PHP
+composer install
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+# Configurar entorno
+cp .env.example .env
 
-### Premium Partners
+# Generar clave de aplicación
+php artisan key:generate
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/)**
-- **[OP.GG](https://op.gg)**
+### Paso 3: Configurar comercio
+Editar `.env` y cambiar:
+```env
+LARAVEL_COD_COMERCIO=TU_CODIGO_COMERCIO
+```
 
-## Contributing
+### Paso 4: Configurar App Electron
+```bash
+cd app.notifier
+npm install
+npm run dist  # Genera el ejecutable
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## 🖥️ Ejecución
 
-## Code of Conduct
+### Opción 1: Desarrollo
+```bash
+# Terminal 1: Laravel
+php artisan serve --port=8000
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+# Terminal 2: Electron
+cd app.notifier
+npm start
+```
 
-## Security Vulnerabilities
+### Opción 2: Producción
+1. Ejecutar: `app.notifier/dist/server Setup 1.0.0.exe`
+2. En otra terminal: `php artisan serve --port=8000`
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+## 📡 Uso desde tu App Web
 
-## License
+```javascript
+// Enviar orden de impresión
+await fetch('https://realdev.cl/api/solicita_ticket', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({
+    comercio: 'TU_CODIGO_COMERCIO',
+    impresora: 'NOMBRE_IMPRESORA',
+    mesa: '5',
+    movimiento: '12345',
+    mesero: 'Juan',
+    detalle: [
+      { nombre: 'Pizza Margherita', cantidad: 1, precio: 15000 }
+    ]
+  })
+});
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
-# gopropiedades
+## 🖨️ Endpoints Disponibles
+
+- `POST /api/pre_cuenta` - Pre-cuenta con delivery
+- `POST /api/solicita_ticket` - Ticket de cocina
+- `POST /api/solicita_happy` - Ticket happy hour
+- `POST /api/solicita_boleta_electronica` - Boleta electrónica SII
+
+## ⚙️ Configuración por Comercio
+
+Cada comercio necesita:
+1. **Código único**: `LARAVEL_COD_COMERCIO=CODIGO123`
+2. **Nombre de impresora**: En el JSON de la petición
+3. **Instalación local**: Este proyecto + app Electron
+
+## 🔧 Desarrollo
+
+### Servidor WebSocket (notifier-server)
+```bash
+cd notifier-server
+npm install
+node index.js
+```
+
+### Compilar assets
+```bash
+npm run dev    # Desarrollo
+npm run prod   # Producción
+```
+
+## 📝 Notas Importantes
+
+- El servidor WebSocket debe estar corriendo en `realdev.cl:6001`
+- Cada PC necesita tener el proyecto Laravel corriendo en `localhost:8000`
+- La app Electron se conecta automáticamente al WebSocket
+- Los nombres de impresora deben coincidir exactamente con Windows
+
+## 🆘 Solución de Problemas
+
+### App Electron no conecta
+- Verificar que Laravel esté en `localhost:8000`
+- Revisar que `realdev.cl:6001` esté accesible
+
+### No imprime
+- Verificar nombre de impresora en Windows
+- Comprobar que la impresora esté encendida y conectada
+- Revisar logs en la app Electron
+
+### Error de conexión WebSocket
+- Verificar conectividad a `realdev.cl:6001`
+- Comprobar firewall/antivirus
+
+## 📄 Licencia
+
+MIT License

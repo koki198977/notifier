@@ -32,7 +32,7 @@
     <script src="{{ asset('/js/app.js') }}"></script>
     <script>
         const list = [];
-        const client_name = "REAL002"
+        const client_name = "REAL004"
 
         Echo.channel('voucher-precuenta.' + client_name)
             .listen('.VoucherEvent', data => {

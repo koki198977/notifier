@@ -40,101 +40,88 @@ class PrinterService
         $impresora->close();
     }
 
-    public function printPreCuenta($data){
-        $connector = new WindowsPrintConnector($data->impresora);
-        $impresora = new Printer($connector);
+    public function printPreCuenta($data) {
+    $connector = new WindowsPrintConnector($data->impresora);
+    $impresora = new Printer($connector);
 
-        $max_width = 48; 
+    $max_width = 48;
 
-        // header
-        $impresora->setJustification(Printer::JUSTIFY_CENTER);
-        $impresora->setTextSize(3,2);
-        $impresora->text($data->comercio . $this->jump);
-        $impresora->setTextSize(1,1);
-        $impresora->text($data->comuna . $this->jump);
-        $impresora->text($data->direccion . $this->jump);
+    // header
+    $impresora->setJustification(Printer::JUSTIFY_CENTER);
+    $impresora->setTextSize(3, 2);
+    $impresora->text($data->comercio . $this->jump);
+    $impresora->setTextSize(1, 1);
+    $impresora->text($data->comuna . $this->jump);
+    $impresora->text($data->direccion . $this->jump);
+    $impresora->feed();
+
+    $impresora->setTextSize(1, 1);
+    $impresora->setJustification(Printer::JUSTIFY_LEFT);
+    $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
+    $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
+
+    if (isset($data->cli_delivery)) {
+        $cliente = $data->cli_delivery;
         $impresora->feed();
+        $impresora->text("Cliente Delivery" . $this->jump);
+        $impresora->text(str_repeat("_", max(0, $max_width)) . $this->jump);  // Línea de separación
 
-        $impresora->setTextSize(1,1);
-        $impresora->setJustification(Printer::JUSTIFY_LEFT);
-        $impresora->text("Mesa:" . $this->space . $data->mesa . $this->jump);
-        $impresora->text("N int:" . $this->space . $data->movimiento . $this->jump);
-        $impresora->text("Fecha:" . $this->space . date('Y-m-d H:i:s') . $this->jump);
-        $impresora->text("Atendido por:" . $this->space . $data->mesero . $this->jump);
+        $impresora->text("Nombre:" . $this->space . $cliente['nombre'] . $this->jump);
+        $impresora->text("Fono:" . $this->space . $cliente['fono'] . $this->jump);
+        $impresora->text("Direccion:" . $this->space . $cliente['direccion'] . $this->jump);
 
-        if(isset($data->cli_delivery)){
-            $cliente = $data->cli_delivery;
-            $impresora->feed();
-            $impresora->text("Cliente Delivery" . $this->jump);
-            $impresora->text(str_repeat("_", $max_width) . $this->jump);
-
-            $impresora->text("Nombre:" . $this->space . $cliente['nombre'] . $this->jump);
-            $impresora->text("Fono:" . $this->space . $cliente['fono'] . $this->jump);
-            $impresora->text("Direccion:" . $this->space . $cliente['direccion'] . $this->jump);
-
-            if(isset($cliente['referencia'])){
-                $impresora->text("Referencia:" . $this->space . $cliente['referencia'] . $this->jump);
-            }
-            if(isset($cliente['monto_paga'])){
-                $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . ', $' . $cliente['monto_paga'] . $this->jump);
-            }else{
-                $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . $this->jump);
-            }
+        if (isset($cliente['referencia'])) {
+            $impresora->text("Referencia:" . $this->space . $cliente['referencia'] . $this->jump);
+        }
+        if (isset($cliente['monto_paga'])) {
+            $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . ', $' . $cliente['monto_paga'] . $this->jump);
         } else {
-            $impresora->text("Cliente:" . $this->space . (!is_null($data['nombrecli']) ? $data['nombrecli'] : '---') . $this->jump);
+            $impresora->text("Forma de Pago:" . $this->space . $cliente['fpago'] . $this->jump);
         }
-        $impresora->feed();
-
-        // body
-        $impresora->setTextSize(1, 1);
-        $impresora->text($this->set_space_col("PRODUCTO", 25) . $this->set_space_col("UNI", 3) . $this->set_space_col("PRECIO", 8, true) . $this->set_space_col("TOTAL", 12, true) . $this->jump);
-        $impresora->setTextSize(1, 1);
-        $impresora->text(str_repeat("_", $max_width) . $this->jump);
-        $impresora->feed();
-
-        $impresora->setTextSize(1, 1);
-        foreach ($data->detalle as $key => $value) {
-            if(strlen($value['nombre']) > 25){
-                $impresora->text($value['nombre'] . $this->jump);
-                $impresora->text($this->set_space_col("", 25) . $this->set_space_col($value['cantidad'], 3, true) . $this->set_space_col(number_format($value['precio'], 0), 8, true) . $this->set_space_col(number_format($value['subtotal'], 0), 12, true) . $this->jump);
-            }else{
-                $impresora->text($this->set_space_col($value['nombre'], 25) . $this->set_space_col($value['cantidad'], 3, true) . $this->set_space_col(number_format($value['precio'], 0), 8, true) . $this->set_space_col(number_format($value['subtotal'], 0), 12, true) . $this->jump);
-            }
-        }
-
-        // totales
-        $impresora->setTextSize(1, 1);
-        $impresora->text(str_repeat("_", $max_width) . $this->jump);
-        $impresora->feed();
-
-        $impresora->setTextSize(1,1);
-        $impresora->setJustification(Printer::JUSTIFY_LEFT);
-        $impresora->text($this->set_space_footer("Total sin prop.", $this->space . $this->currency($data->totales[0]['totalsinprop']), $max_width) . $this->jump);
-        
-        if(intval($data->totales[0]['descuento']) > 0){
-            $impresora->text($this->set_space_footer("Descuento", $this->space . $this->currency($data->totales[0]['descuento']), $max_width) . $this->jump);
-        }
-        if(intval($data->totales[0]['descuespecial']) > 0){
-            $impresora->text($this->set_space_footer("Desc. especial:", $this->space . $this->currency($data->totales[0]['descuespecial']), $max_width) . $this->jump);
-        }
-        if(intval($data->totales[0]['descpuntos']) > 0){
-            $impresora->text($this->set_space_footer("Desc. puntos:", $this->space . $this->currency($data->totales[0]['descpuntos']), $max_width) . $this->jump);
-        }
-        $impresora->text($this->set_space_footer("Total:", $this->space . $this->currency($data->totales[0]['total']), $max_width) . $this->jump);
-        $impresora->text($this->set_space_footer("Propina sugerida:", $this->space . $this->currency($data->totales[0]['propina']), $max_width) . $this->jump);
-        $impresora->text($this->set_space_footer("Total con prop.", $this->space . $this->currency($data->totales[0]['totalconprop']), $max_width) . $this->jump);
-        $impresora->feed();
-
-        // footer
-        $impresora->feed(2);
-        $impresora->setJustification(Printer::JUSTIFY_CENTER);
-        $impresora->setTextSize(1, 1);
-        $impresora->text('www.realdev.cl');
-
-        $impresora->feed(3);
-        $impresora->cut();
-        $impresora->close();
+    } else {
+        $impresora->text("Cliente:" . $this->space . (!is_null($data['nombrecli']) ? $data['nombrecli'] : '---') . $this->jump);
     }
+    $impresora->feed();
+
+    // body
+    $impresora->setTextSize(1, 1);
+    $impresora->text($this->set_space_col("PRODUCTO", 25) . $this->set_space_col("UNI", 3) . $this->set_space_col("PRECIO", 8, true) . $this->set_space_col("TOTAL", 12, true) . $this->jump);
+    $impresora->setTextSize(1, 1);
+    $impresora->text(str_repeat("_", max(0, $max_width)) . $this->jump);  // Línea de separación
+    $impresora->feed();
+
+    $impresora->setTextSize(1, 1);
+    foreach ($data->detalle as $key => $value) {
+        if (strlen($value['nombre']) > 25) {
+            $impresora->text($value['nombre'] . $this->jump);
+            $impresora->text($this->set_space_col("", 25) . $this->set_space_col($value['cantidad'], 3, true) . $this->set_space_col(number_format($value['precio'], 0), 8, true) . $this->set_space_col(number_format($value['subtotal'], 0), 12, true) . $this->jump);
+        } else {
+            $impresora->text($this->set_space_col($value['nombre'], 25) . $this->set_space_col($value['cantidad'], 3, true) . $this->set_space_col(number_format($value['precio'], 0), 8, true) . $this->set_space_col(number_format($value['subtotal'], 0), 12, true) . $this->jump);
+        }
+    }
+
+    // totales
+    $impresora->setTextSize(1, 1);
+    $impresora->text(str_repeat("_", max(0, $max_width)) . $this->jump);  // Línea de separación
+    $impresora->feed();
+
+    $impresora->setTextSize(1, 1);
+    $impresora->setJustification(Printer::JUSTIFY_LEFT);
+    $impresora->text($this->set_space_footer("Total:", $this->space . $this->currency($data->totales[0]['total']), $max_width) . $this->jump);
+    $impresora->feed();
+
+    // footer
+    $impresora->feed(2);
+    $impresora->setJustification(Printer::JUSTIFY_CENTER);
+    $impresora->setTextSize(1, 1);
+    $impresora->text('www.realdev.cl');
+
+    $impresora->feed(3);
+    $impresora->cut();
+    $impresora->close();
+}
+
+
 
     public function printTicket($data){
         $connector = new WindowsPrintConnector($data->impresora);
@@ -316,10 +303,16 @@ class PrinterService
         return '$' . number_format($value, 0);
     }
 
-    private function set_space_col($value, $size, $is_reverse = false){
-        $count = $size - strlen($value);
-        return !$is_reverse ? $value . str_repeat(" ", $count) : str_repeat(" ", $count) . $value;
-    }
+    private function set_space_col($value, $size, $is_reverse = false) {
+    // Asegurarse de que el tamaño no sea menor que la longitud de $value
+    $count = max(0, $size - strlen($value)); // max(0, ...) evita valores negativos
+
+    // Generar los espacios de manera adecuada
+    $spaces = str_repeat(" ", $count);
+
+    // Devolver el valor con los espacios añadidos en la dirección adecuada
+    return !$is_reverse ? $value . $spaces : $spaces . $value;
+}
 
     private function set_space_footer($title, $value, $size){
         $count = $size - (strlen($title) + strlen($value));
