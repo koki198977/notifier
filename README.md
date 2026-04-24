@@ -21,17 +21,22 @@ App Web (Vercel/Web) → Servidor (realdev.cl) → PC Local (Restaurante)
 
 ### Requisitos
 - Windows 10+
-- PHP 7.4+ ([descargar](https://windows.php.net/download/))
+- XAMPP ([descargar](https://www.apachefriends.org/download.html))
 - Composer ([descargar](https://getcomposer.org/download/))
 - Node.js 14+ ([descargar](https://nodejs.org/))
 
-### Paso 1: Clonar el proyecto
+### Paso 1: Instalar XAMPP
+1. Descargar e instalar XAMPP
+2. Iniciar Apache desde el panel de control de XAMPP
+
+### Paso 2: Clonar el proyecto en XAMPP
 ```bash
-git clone https://github.com/koki198977/notifier.git
-cd notifier
+# Clonar en la carpeta notifier dentro de htdocs
+git clone https://github.com/koki198977/notifier.git C:\xampp\htdocs\notifier
+cd C:\xampp\htdocs\notifier
 ```
 
-### Paso 2: Configurar Laravel
+### Paso 3: Configurar Laravel
 ```bash
 # Instalar dependencias PHP
 composer install
@@ -43,13 +48,39 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-### Paso 3: Configurar comercio
+### Paso 4: Configurar comercio
 Editar `.env` y cambiar:
 ```env
 LARAVEL_COD_COMERCIO=TU_CODIGO_COMERCIO
 ```
 
-### Paso 4: Configurar App Electron
+### Paso 5: Configurar XAMPP para servir Laravel directamente
+Para que `localhost` vaya directo a Laravel, necesitas modificar la configuración de Apache en XAMPP.
+
+**Método recomendado: Cambiar DocumentRoot en httpd.conf**
+
+1. Abre el archivo: `C:\xampp\apache\conf\httpd.conf`
+2. Busca la línea que dice `DocumentRoot` (alrededor de la línea 251)
+3. Cámbiala por:
+```apache
+DocumentRoot "C:/xampp/htdocs/notifier/public"
+```
+4. Busca la línea `<Directory` correspondiente y cámbiala por:
+```apache
+<Directory "C:/xampp/htdocs/notifier/public">
+```
+5. Guarda el archivo y reinicia Apache desde el panel de XAMPP
+
+**Método alternativo: Redirección con .htaccess**
+Si prefieres no modificar `httpd.conf`, crea el archivo `C:\xampp\htdocs\.htaccess`:
+```apache
+RewriteEngine On
+RewriteRule ^$ notifier/public/ [R=301,L]
+```
+
+**Resultado**: `localhost` apuntará directamente a Laravel sin mostrar la página de XAMPP.
+
+### Paso 6: Configurar App Electron
 ```bash
 cd app.notifier
 npm install
@@ -58,19 +89,24 @@ npm run dist  # Genera el ejecutable
 
 ## 🖥️ Ejecución
 
-### Opción 1: Desarrollo
-```bash
-# Terminal 1: Laravel
-php artisan serve --port=8000
+### Producción (Recomendado)
+1. **Iniciar Apache** desde XAMPP
+2. **Ejecutar**: `app.notifier/dist/server Setup 1.0.0.exe`
 
-# Terminal 2: Electron
-cd app.notifier
-npm start
+**Nota**: XAMPP está configurado para servir directamente desde `/notifier/public/` modificando el `DocumentRoot` en `httpd.conf`.
+
+### Desarrollo (Alternativo)
+Si necesitas hacer cambios al código:
+```bash
+# Opción 1: Usar XAMPP (recomendado)
+# Solo inicia Apache y accede a localhost
+
+# Opción 2: Laravel independiente (solo para desarrollo)
+php artisan serve --port=8000
+# Luego ejecutar app Electron (cambiará la URL a localhost:8000)
 ```
 
-### Opción 2: Producción
-1. Ejecutar: `app.notifier/dist/server Setup 1.0.0.exe`
-2. En otra terminal: `php artisan serve --port=8000`
+**Nota**: En producción NO necesitas terminales abiertos. Apache sirve Laravel automáticamente a través de `localhost` → `/notifier/public/`.
 
 ## 📡 Uso desde tu App Web
 
@@ -130,9 +166,16 @@ npm run prod   # Producción
 
 ## 🆘 Solución de Problemas
 
+### `localhost` muestra página de XAMPP en lugar de Laravel
+- Verificar que modificaste `C:\xampp\apache\conf\httpd.conf` correctamente
+- Asegúrate de que el `DocumentRoot` apunte a `"C:/xampp/htdocs/notifier/public"`
+- Reinicia Apache desde el panel de XAMPP después de cambiar `httpd.conf`
+- Alternativamente, usa el método `.htaccess` si no quieres modificar `httpd.conf`
+
 ### App Electron no conecta
-- Verificar que Laravel esté en `localhost:8000`
+- Verificar que Laravel esté accesible en `localhost` (no `localhost:8000`)
 - Revisar que `realdev.cl:6001` esté accesible
+- Comprobar que Apache esté corriendo en XAMPP
 
 ### No imprime
 - Verificar nombre de impresora en Windows
@@ -142,6 +185,11 @@ npm run prod   # Producción
 ### Error de conexión WebSocket
 - Verificar conectividad a `realdev.cl:6001`
 - Comprobar firewall/antivirus
+
+### Laravel muestra errores
+- Verificar que `composer install` se ejecutó correctamente
+- Comprobar que el archivo `.env` tiene `LARAVEL_COD_COMERCIO` configurado
+- Verificar permisos de carpetas `storage/` y `bootstrap/cache/`
 
 ## 📄 Licencia
 
